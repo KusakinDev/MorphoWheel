@@ -161,7 +161,7 @@ static void ShowRing(NSString *group, NSArray<NSString *> *paths, BOOL dragMode)
     free(js);
     NSArray *items = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     if (items.count == 0) {
-        if (!dragMode) MorphoWheelNotify("MorphoWheel", "Для этого файла нет операций");
+        if (!dragMode) MorphoWheelNotify("MorphoWheel", "No operations for this file");
         return;
     }
     d.view.group = group; d.view.paths = paths; d.view.items = items;
@@ -224,10 +224,10 @@ static OSStatus HotkeyHandler(EventHandlerCallRef next, EventRef ev, void *ud) {
     self.item = [NSStatusBar.systemStatusBar statusItemWithLength:NSSquareStatusItemLength];
     self.item.button.image = [NSImage imageWithSystemSymbolName:@"circle.hexagongrid.fill" accessibilityDescription:@"MorphoWheel"];
     NSMenu *menu = [[NSMenu alloc] init];
-    NSMenuItem *sel = [menu addItemWithTitle:@"Конвертировать выбранное в Finder   ⌃⌥Пробел" action:@selector(fromFinder) keyEquivalent:@""];
+    NSMenuItem *sel = [menu addItemWithTitle:@"Convert Files Selected in Finder   ⌃⌥Space" action:@selector(fromFinder) keyEquivalent:@""];
     sel.target = self;
     [menu addItem:NSMenuItem.separatorItem];
-    [menu addItemWithTitle:@"Выйти" action:@selector(terminate:) keyEquivalent:@"q"];
+    [menu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
     self.item.menu = menu;
 
     // Global hotkey: Control+Option+Space.

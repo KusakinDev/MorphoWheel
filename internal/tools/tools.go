@@ -17,7 +17,7 @@ type ErrMissing struct {
 }
 
 func (e ErrMissing) Error() string {
-	return fmt.Sprintf("%s не найден (установите: %s)", e.Name, e.Hint)
+	return fmt.Sprintf("%s not found (install: %s)", e.Name, e.Hint)
 }
 
 var hints = map[string]string{

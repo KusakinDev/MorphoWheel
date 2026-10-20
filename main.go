@@ -53,9 +53,9 @@ func runOp(id string, paths []string) {
 	}
 	switch {
 	case failed > 0:
-		ui.Notify("MorphoWheel: ошибка", fmt.Sprintf("%d из %d: %v", failed, len(paths), lastErr))
+		ui.Notify("MorphoWheel: error", fmt.Sprintf("%d of %d failed: %v", failed, len(paths), lastErr))
 	case lastOut != "":
-		ui.Notify("MorphoWheel", fmt.Sprintf("Готово: %s", filepath.Base(lastOut)))
+		ui.Notify("MorphoWheel", fmt.Sprintf("Done: %s", filepath.Base(lastOut)))
 		if done == 1 {
 			_ = exec.Command("open", "-R", lastOut).Start()
 		}
@@ -72,7 +72,7 @@ end repeat
 return out`
 	raw, err := exec.Command("osascript", "-e", script).Output()
 	if err != nil {
-		ui.Notify("MorphoWheel", "Нет доступа к Finder (System Settings → Privacy → Automation)")
+		ui.Notify("MorphoWheel", "Cannot access Finder (System Settings → Privacy & Security → Automation)")
 		return
 	}
 	var paths []string
@@ -82,7 +82,7 @@ return out`
 		}
 	}
 	if len(paths) == 0 {
-		ui.Notify("MorphoWheel", "В Finder ничего не выбрано")
+		ui.Notify("MorphoWheel", "Nothing is selected in Finder")
 		return
 	}
 	ui.ShowRing("convert", paths)

@@ -2,7 +2,7 @@ APP := build/MorphoWheel.app
 
 BIN_DIR  := $(HOME)/.local/bin
 APP_DIR  := $(HOME)/Applications
-LABEL    := local.morphowheel.mac
+LABEL    := io.github.kusakindev.morphowheel
 AGENT    := $(HOME)/Library/LaunchAgents/$(LABEL).plist
 INSTALLED := $(APP_DIR)/MorphoWheel.app
 

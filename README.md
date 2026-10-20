@@ -1,10 +1,19 @@
 # MorphoWheel
 
-Free file converter for macOS with a circular drop menu. Drag a file onto a
-sector of the wheel and get the converted copy next to the original.
+[![CI](https://github.com/KusakinDev/MorphoWheel/actions/workflows/ci.yml/badge.svg)](https://github.com/KusakinDev/MorphoWheel/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Platform: macOS 12+](https://img.shields.io/badge/platform-macOS%2012%2B-lightgrey)
+
+Free, open-source file converter for macOS with a circular drop menu. Hold a
+modifier key, drag a file onto a sector of the wheel, and get the converted
+copy next to the original. Everything runs locally; nothing is uploaded.
 
 Inspired by [Sweetch](https://github.com/krllmrzv/Sweetch) (Windows), rewritten
-in Go with a thin Objective-C layer for the native UI.
+from scratch in Go with a thin Objective-C layer for the native UI.
+
+> **Status: early (0.1).** The conversion core is tested. The drag-triggered
+> ring depends on global event monitoring that behaves differently across macOS
+> versions, so please report what you see; see [Troubleshooting](#troubleshooting).
 
 ## Quick start
 
@@ -103,7 +112,17 @@ Converters are searched in `PATH`, then
 - **Ring does not appear while dragging**: check Input Monitoring permission.
 - **Hotkey does nothing**: check Automation → Finder; another app may own
   Control+Option+Space.
-- **"ffmpeg не найден" after autostart**: apps started at login have a minimal
+- **"ffmpeg not found" after autostart**: apps started at login have a minimal
   `PATH`. `./start.sh` links converters from custom locations into the tools
   directory above; rerun it after installing ffmpeg elsewhere.
 - **Logs of the autostarted app**: `log show --last 5m --predicate 'process == "MorphoWheel"'`
+
+## Contributing
+
+Issues and pull requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
+Security reports: [SECURITY.md](SECURITY.md).
+
+## License
+
+[MIT](LICENSE). The converters MorphoWheel calls keep their own licenses, see
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

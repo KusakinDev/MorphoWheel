@@ -1,0 +1,43 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and chip
+      placeholder: macOS 15.2, Apple Silicon
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got.
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: File type and operation
+      placeholder: ".cr3 → JPG (Shift)"
+  - type: dropdown
+    id: trigger
+    attributes:
+      label: How did you start the action
+      options:
+        - Drag with Shift / Control / Option
+        - Control+Option+Space hotkey
+        - Other
+  - type: checkboxes
+    id: permissions
+    attributes:
+      label: Permissions granted
+      options:
+        - label: Input Monitoring
+        - label: Automation → Finder
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or notification text
+      render: shell

@@ -88,7 +88,7 @@ func init() {
 	}
 
 	// Archives: extract into a folder named after the archive.
-	register(Op{ID: "arc-extract", Title: "Распаковать", Group: Convert, Kinds: []kinds.Kind{kinds.Archive}, OutExt: "",
+	register(Op{ID: "arc-extract", Title: "Extract", Group: Convert, Kinds: []kinds.Kind{kinds.Archive}, OutExt: "",
 		Run: func(ctx context.Context, in, _ string) error {
 			dir := OutputPath(in, "", "")
 			if err := os.MkdirAll(dir, 0o755); err != nil {

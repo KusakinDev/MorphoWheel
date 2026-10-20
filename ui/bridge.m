@@ -136,6 +136,26 @@ static const CGFloat kSize = 380, kInner = 54, kOuter = 176;
 @end
 
 static AppDelegate *gDelegate;
+static NSTimer *gDragTimer;
+
+// The drag-and-drop callbacks are not delivered when the button is released
+// outside a sector, so the ring in drag mode watches the mouse button itself.
+// The short delay lets performDragOperation run first on a successful drop.
+static void StopDragWatch(void) {
+    [gDragTimer invalidate];
+    gDragTimer = nil;
+}
+
+static void StartDragWatch(NSPanel *panel) {
+    StopDragWatch();
+    gDragTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeats:YES block:^(NSTimer *t) {
+        if (!panel.isVisible) { StopDragWatch(); return; }
+        if (NSEvent.pressedMouseButtons & 1) return;
+        StopDragWatch();
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{ [panel orderOut:nil]; });
+    }];
+}
 
 static NSString *GroupForFlags(NSEventModifierFlags f) {
     if (f & NSEventModifierFlagShift) return @"convert";
@@ -176,7 +196,14 @@ static void ShowRing(NSString *group, NSArray<NSString *> *paths, BOOL dragMode)
     f.origin.y = MAX(NSMinY(vis), MIN(f.origin.y, NSMaxY(vis) - kSize));
     [d.panel setFrame:f display:YES];
     [d.panel orderFrontRegardless];
-    if (!dragMode) { [NSApp activateIgnoringOtherApps:YES]; [d.panel makeKeyWindow]; [d.panel makeFirstResponder:d.view]; }
+    if (dragMode) {
+        StartDragWatch(d.panel);
+    } else {
+        StopDragWatch();
+        [NSApp activateIgnoringOtherApps:YES];
+        [d.panel makeKeyWindow];
+        [d.panel makeFirstResponder:d.view];
+    }
 }
 
 void MorphoWheelShowRing(const char *group, const char *pathsJSON) {
@@ -219,6 +246,14 @@ static OSStatus HotkeyHandler(EventHandlerCallRef next, EventRef ev, void *ud) {
     self.panel.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorFullScreenAuxiliary;
     self.panel.hidesOnDeactivate = NO;
     self.panel.contentView = self.view;
+
+    // Hotkey mode: clicking elsewhere (or switching apps) dismisses the ring.
+    __weak RingView *wv = self.view;
+    [NSNotificationCenter.defaultCenter addObserverForName:NSWindowDidResignKeyNotification
+        object:self.panel queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification *n) {
+            RingView *v = wv;
+            if (v && !v.dragMode) [v.window orderOut:nil];
+        }];
 
     // Menu bar item.
     self.item = [NSStatusBar.systemStatusBar statusItemWithLength:NSSquareStatusItemLength];
